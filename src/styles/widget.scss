@@ -2,21 +2,31 @@
 * Widget Styles
 */
 
+$widget: "widget";
+
 // color palette
+$white: #fff;
+$black: #000;
 $Basic: #3c3c3c;
+$Clouds: #ecf0f1;
 $Pomegranate: #c0392b;
 $Asbestos: #7f8c8d;
+$Alizarin: #e74c3c;
 $MidnightBlue: #2c3e50;
+$WetAsphalt: #34495e;
 
-$widget-default-color: $Basic;
-$widget-border-color: $Basic;
+$widget-bg: rgba( $Clouds, .5 );
+$widget-default-color: $MidnightBlue;
+$widget-active-color: $Alizarin;
+$widget-border-color: $MidnightBlue;
 
-.widget {
+.#{$widget} {  
   display: flex;
   flex-flow: column;
   color: $widget-default-color;
   font-size: 15px;
-  font-family: Arial, sans-serif;
+  font-family: Verdana, sans-serif;
+  background: $widget-bg;
   border: 1px solid $widget-border-color;
   border-radius: 5px;
   overflow: hidden;
@@ -42,7 +52,7 @@ $widget-border-color: $Basic;
   &__expand-btn {
     width: 35px;
     height: 35px;
-    line-height: 34px;
+    line-height: 33px;
     border: 1px solid $widget-border-color;
     border-radius: 5px;
     text-align: center;
@@ -50,15 +60,17 @@ $widget-border-color: $Basic;
     
     &:after {
       content: '\21c5';
-      font-size: 1.5em;
+      font-size: 1.8em;
       font-weight: bold;
+    }
+    
+    &_active {
+      color: $widget-active-color;
+      border-color: $widget-active-color;
     }
   }
   
-  &__body {
-    transition: height .2s;
-    //background: yellow;
-  }
+  &__body {}  
   
   &__footer {
     padding: 5px 15px;
@@ -67,14 +79,13 @@ $widget-border-color: $Basic;
   
   // modifiers
   &_collapsed {
-    .widget__bd {
-      height: 0;
-      visibility: hidden;       
+    .#{$widget}__body {
+      display: none;     
     }
   }
   
   // inner blocks
-  .widget-sum {
+  .#{$widget}-sum {
     display: flex;
     justify-content: space-between;
     align-items: center;    
@@ -83,10 +94,15 @@ $widget-border-color: $Basic;
       text-transform: capitalize;
     }
     
-    &__value {}
+    &__value {
+      &:before {
+        content: '\24';
+        margin-right: 2px;
+      }
+    }
   }
   
-  .widget-tbl {
+  .#{$widget}-tbl {
     width: 100%;
     text-align: center;
     border-collapse: collapse;
@@ -98,7 +114,7 @@ $widget-border-color: $Basic;
     }
   }
   
-  .widget-form {
+  .#{$widget}-form {
     display: flex;
     padding: 15px;
     border-bottom: 1px solid $widget-border-color;
@@ -111,7 +127,7 @@ $widget-border-color: $Basic;
     }
   }
   
-  .widget-symbol {
+  .#{$widget}-symbol {
     display: inline-block;
     
     &:after {
