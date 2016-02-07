@@ -67,6 +67,8 @@ gulp.task('process:js', processJs.bind(null, SRC + '/js/widget.js', DEST));
 
 gulp.task('watch', function() {
   gulp.watch(SRC + '/styles/**/*.scss', ['lint:sass', 'process:sass']);
+  gulp.watch(SRC + '/js/**/*.js', ['process:js']);
+  gulp.watch(SRC + '/index.html', ['process:html']);
 });
 
 gulp.task('default', ['clean'], function() {

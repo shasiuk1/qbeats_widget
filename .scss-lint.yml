@@ -12,7 +12,7 @@ linters:
   ColorKeyword:
     enabled: false
   Comment:
-    enabled: true
+    enabled: false
     style: silent
   VendorPrefix:
     enabled: false

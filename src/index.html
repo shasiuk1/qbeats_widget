@@ -8,6 +8,11 @@
       margin: 0;
       padding: 0;
     }
+    
+    #container {
+      width: 50vw;
+      margin: 50px auto;
+    }
   </style>
   <link rel="stylesheet" href="widget.css">
 </head>
@@ -15,9 +20,68 @@
 
 <div id="container"></div>
 
+<!--<div class="widget">-->
+  <!--<header class="widget__hdr">-->
+    <!--<h3 class="widget__title">Expenses</h3>-->
+    <!--<div class="widget__expand-btn"></div>-->
+  <!--</header>-->
+  <!--<div class="widget__bd">-->
+    <!--<table class="widget-tbl">-->
+      <!--<thead class="widget-tbl__head">-->
+      <!--<tr>-->
+        <!--<th>-->
+          <!--<span>Name</span>-->
+          <!--<span></span>-->
+        <!--</th>-->
+        <!--<th>-->
+          <!--<span>Ammount</span>-->
+        <!--</th>-->
+      <!--</tr>-->
+      <!--</thead>-->
+      <!--<tbody class="widget-tbl__body">-->
+      <!--<tr>-->
+        <!--<td>-->
+          <!--sdgsdgsdg-->
+        <!--</td>-->
+        <!--<td>-->
+          <!--sdfsdfsdf-->
+        <!--</td>-->
+      <!--</tr>-->
+      <!--</tbody>-->
+    <!--</table>-->
+    <!--<table class="widget-form">-->
+      <!--<tbody>-->
+      <!--<tr>-->
+
+      <!--</tr>-->
+      <!--</tbody>-->
+      <!--<div class="widget-form__cell">-->
+        <!--<input class="widget-input widget-input_name"-->
+               <!--type="text"-->
+               <!--name="name"-->
+               <!--placeholder="Name"/>-->
+      <!--</div>-->
+      <!--<div class="widget-form__cell">-->
+        <!--<span class="widget-symbol"></span>-->
+        <!--<input class="widget-input widget-input_value"-->
+               <!--type="text"-->
+               <!--name="value"-->
+               <!--placeholder="Ammount"/>-->
+        <!--<button class="widget-add-btn">+</button>-->
+      <!--</div>-->
+    <!--</table>-->
+    <!--<footer class="widget__ftr">-->
+      <!--<div class="widget-sum">-->
+        <!--<span class="widget-sum__title">total</span>-->
+        <!--<span class="widget-sum__value">$50</span>-->
+      <!--</div>-->
+    <!--</footer>-->
+  <!--</div>-->
+<!--</div>-->
+
 <script src="widget.js"></script>
 <script>
-  var a = new Widget(document.getElementById('container'));
+  var w = new Widget(document.getElementById('container'));
 </script>
 
 </body>

@@ -1,0 +1,121 @@
+/**
+* Widget Styles
+*/
+
+// color palette
+$Basic: #3c3c3c;
+$Pomegranate: #c0392b;
+$Asbestos: #7f8c8d;
+$MidnightBlue: #2c3e50;
+
+$widget-default-color: $Basic;
+$widget-border-color: $Basic;
+
+.widget {
+  display: flex;
+  flex-flow: column;
+  color: $widget-default-color;
+  font-size: 15px;
+  font-family: Arial, sans-serif;
+  border: 1px solid $widget-border-color;
+  border-radius: 5px;
+  overflow: hidden;
+  
+  *,
+  *:after,
+  *:before { box-sizing: border-box; }
+  
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 15px;
+    border-bottom: 1px solid $widget-border-color;
+  }
+  
+  &__title {
+    padding: 0;
+    margin: 0;
+    text-transform: capitalize;
+  }
+  
+  &__expand-btn {
+    width: 35px;
+    height: 35px;
+    line-height: 34px;
+    border: 1px solid $widget-border-color;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    
+    &:after {
+      content: '\21c5';
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+  }
+  
+  &__body {
+    transition: height .2s;
+    //background: yellow;
+  }
+  
+  &__footer {
+    padding: 5px 15px;
+    //background: blue;
+  }
+  
+  // modifiers
+  &_collapsed {
+    .widget__bd {
+      height: 0;
+      visibility: hidden;       
+    }
+  }
+  
+  // inner blocks
+  .widget-sum {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;    
+    
+    &__title {
+      text-transform: capitalize;
+    }
+    
+    &__value {}
+  }
+  
+  .widget-tbl {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+    
+    td,
+    th {
+      width: 50%;
+      border: 1px solid;
+    }
+  }
+  
+  .widget-form {
+    display: flex;
+    padding: 15px;
+    border-bottom: 1px solid $widget-border-color;
+    
+    &__cell {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 50%;
+    }
+  }
+  
+  .widget-symbol {
+    display: inline-block;
+    
+    &:after {
+      content:'\24';
+    }
+  }
+}
