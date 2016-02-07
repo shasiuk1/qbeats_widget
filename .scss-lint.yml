@@ -1,0 +1,65 @@
+exclude:
+ // - './src/'
+linters:
+  BangFormat:
+    enabled: true
+    space_before_bang: true
+    space_after_bang: false
+  BemDepth:
+    enabled: false
+  ChainedClasses:
+    enabled: false
+  ColorKeyword:
+    enabled: false
+  Comment:
+    enabled: true
+    style: silent
+  VendorPrefix:
+    enabled: false
+  PropertySortOrder:
+    enabled: false
+  Indentation:
+    enabled: false
+  StringQuotes:
+    enabled: false
+  UrlQuotes:
+    enabled: false
+  BorderZero:
+    enabled: false
+  SelectorFormat:
+    enabled: false
+  ColorVariable:
+    enabled: true
+  NestingDepth:
+    enabled: true
+    max_depth: 3
+    ignore_parent_selectors: false
+  NameFormat:
+    enabled: false
+  IdSelector:
+    enabled: false
+  ImportantRule:
+    enabled: true
+  ImportPath:
+    enabled: true
+    leading_underscore: false
+    filename_extension: false
+  HexLength:
+    enabled: true
+    style: short
+  HexNotation:
+    enabled: true
+    style: lowercase
+  DeclarationOrder:
+    enabled: true
+  FinalNewline:
+    enabled: true
+    present: true
+  Indentation:
+    enabled: true
+    allow_non_nested_indentation: false
+    character: space
+    width: 2
+  EmptyLineBetweenBlocks:
+    enabled: true
+    ignore_single_line_blocks: true
