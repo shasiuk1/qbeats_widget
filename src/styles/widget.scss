@@ -14,22 +14,38 @@ $Asbestos: #7f8c8d;
 $Alizarin: #e74c3c;
 $MidnightBlue: #2c3e50;
 $WetAsphalt: #34495e;
+$Nephritis: #27ae60;
 
-$widget-bg: rgba( $Clouds, .5 );
-$widget-default-color: $MidnightBlue;
+$widget-primary-color: $MidnightBlue;
+$widget-secondary-color: lighten($widget-primary-color, 15%);
 $widget-active-color: $Alizarin;
-$widget-border-color: $MidnightBlue;
+$widget-border-color: $Nephritis;
+$widget-header-bg: $Clouds;
+$widget-header-collapsed-bg: $Asbestos;
+$widget-header-collapsed-color: $white;
+$widget-form-bg: darken($Clouds, 25%);
+$widget-sum-bg: $Clouds;
+$widget-input-color: $Nephritis;
+$widget-input-bg: $white;
+$widget-tbl-bg: rgba($Clouds, .5);
+$widget-tbl-head-bg: darken($Clouds, 25%);
 
-.#{$widget} {  
-  display: flex;
-  flex-flow: column;
-  color: $widget-default-color;
+// dimensions
+$widget-header-height: 50px;
+$widget-form-height: 50px;
+$widget-sum-height: 45px;
+$widget-row-height: 35px;
+
+.#{$widget} {
+  position: relative;
+  color: $widget-primary-color;
   font-size: 15px;
   font-family: Verdana, sans-serif;
-  background: $widget-bg;
   border: 1px solid $widget-border-color;
   border-radius: 5px;
   overflow: hidden;
+  max-height: 999px;
+  transition: max-height 1s ease-in;
   
   *,
   *:after,
@@ -39,13 +55,19 @@ $widget-border-color: $MidnightBlue;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 15px;
+    height: $widget-header-height;
+    padding: 0 15px;
+    color: $widget-secondary-color;
     border-bottom: 1px solid $widget-border-color;
+    background: $widget-header-bg;
+    transition: all .2s;
   }
   
   &__title {
     padding: 0;
     margin: 0;
+    font-size: 1.2em;
+    font-weight: bold;
     text-transform: capitalize;
   }
   
@@ -53,85 +75,195 @@ $widget-border-color: $MidnightBlue;
     width: 35px;
     height: 35px;
     line-height: 33px;
-    border: 1px solid $widget-border-color;
+    border: 1px solid $widget-secondary-color;
     border-radius: 5px;
     text-align: center;
     cursor: pointer;
+    color: $widget-secondary-color;
+    transition: all .2s;
     
     &:after {
-      content: '\21c5';
+      content: '\25B2';
       font-size: 1.8em;
       font-weight: bold;
+      line-height: 1;
     }
     
     &_active {
-      color: $widget-active-color;
-      border-color: $widget-active-color;
+      color: $widget-header-collapsed-color;
+      border-color: $widget-header-collapsed-color;
+      transform: rotate(180deg);
     }
   }
   
-  &__body {}  
-  
+  &__body {
+    border-bottom: 1px solid $widget-border-color;
+  }
+
   &__footer {
-    padding: 5px 15px;
-    //background: blue;
+    display: flex;
+    flex-flow: column;
+    //padding: 10px 15px;
   }
   
   // modifiers
   &_collapsed {
-    .#{$widget}__body {
-      display: none;     
+    max-height: $widget-header-height - 1;
+    transition: max-height .5s ease-out;
+    
+    .#{$widget}__header {
+      color: $widget-header-collapsed-color;
+      background: $widget-header-collapsed-bg;
     }
   }
   
   // inner blocks
+  .#{$widget}-table {
+    position: relative;
+    background: $widget-tbl-bg;
+    
+    &__head {
+      background: $widget-tbl-head-bg;
+      border-bottom: 1px solid $widget-border-color;
+    }
+    
+    &__body {
+      min-height: $widget-row-height * 2;
+      max-height: $widget-row-height * 6 - 1;
+      overflow-y: auto;
+    }
+    
+    &__tr {
+      height: $widget-row-height;
+      border-bottom: 1px solid $widget-border-color;
+      columns: 2;
+      //column-rule: 1px solid $widget-border-color;
+      
+      &:last-child { border: 0; }
+    }
+    
+    &__td {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      text-align: center;
+    }
+    
+    &__head-item {
+      width: 100%;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  }
+  
   .#{$widget}-sum {
     display: flex;
     justify-content: space-between;
-    align-items: center;    
+    align-items: center;
+    height: $widget-sum-height;
+    padding: 0 25px;
+    font-weight: bold;
+    font-size: 1.2em;
+    color: $widget-secondary-color;
+    background: $widget-sum-bg;
     
-    &__title {
+    &__text {
       text-transform: capitalize;
+      
+      &:after {
+        content: ':';
+      }
     }
     
     &__value {
       &:before {
-        content: '\24';
+        content:'\24';
         margin-right: 2px;
       }
     }
-  }
-  
-  .#{$widget}-tbl {
-    width: 100%;
-    text-align: center;
-    border-collapse: collapse;
     
-    td,
-    th {
-      width: 50%;
-      border: 1px solid;
-    }
   }
   
   .#{$widget}-form {
     display: flex;
-    padding: 15px;
+    align-items: stretch;
+    height: $widget-form-height;
+    background: $widget-form-bg;
     border-bottom: 1px solid $widget-border-color;
     
     &__cell {
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 50%;
+      flex: 1;
+      max-width: 45%;
+      padding: 10px 15px;
+      
+      &:nth-child(2) {
+        flex: 2;
+        max-width: 55%;
+      }
     }
-  }
-  
-  .#{$widget}-symbol {
-    display: inline-block;
     
-    &:after {
-      content:'\24';
+    &__input {
+      flex: 1;
+      height: 30px;
+      padding: 5px 10px;
+      font-size: 1em;
+      color: $widget-input-color;
+      background: $widget-input-bg;
+      border-radius: 3px;
+      border: 2px solid $widget-input-bg;
+      transition: all .2s;
+      min-width: 25px;
+      
+      &:focus {
+        border-color: $widget-input-color;
+      }
+      
+      &_val {
+        margin: 0 5px;
+      }
     }
-  }
+    
+    &__symbol {
+      display: inline-block;
+      margin: 0 3px 4px;
+      font-size: 1.4em;
+      color: darken($widget-input-color, 15%);
+
+      &:after {
+        content:'\24';
+      }
+    }
+    
+    &__submit {
+      height: 30px;
+      width: 30px;
+      padding: 0;
+      font-size: 1.8em; 
+      font-weight: bold;
+      line-height: 1;
+      color: darken($widget-input-color, 15%);
+      background: $widget-input-bg;
+      border: 0;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all .2s;      
+      
+      &:hover,
+      &:focus {
+        background: $widget-input-color;
+        color: $widget-input-bg;
+      }
+      
+      &:before {
+        content: '+';   
+      }
+    }
+
+    &__input,
+    &__submit { outline: none !important; }
+  }  
 }
