@@ -6,24 +6,42 @@ var Widget = (function() {
     "w": "widget",
     "w--collapsed": "widget_collapsed",
     "w_head": "widget__header",
+    "w_body": "widget__body",
+    "w_footer": "widget__footer",
     "w_title": "widget__title",
     "w_expand": "widget__expand-btn",
     "w_expand--active": "widget__expand-btn_active",
-    "w_body": "widget__body",
-    "w_footer": "widget__footer",
+    "w-tbl": "widget-table",
+    "w-tbl_head": "widget-table__head",
+    "w-tbl_tr": "widget-table__tr",
+    "w-tbl_head-i": "widget-table__head-item",
+    "w-tbl_td": "widget-table__td",
+    "w-tbl_body": "widget-table__body",
+    "w-form": "widget-form",
+    "w-form_cell": "widget-form__cell",
+    "w-form_input": "widget-form__input",
+    "w-form_input_val": "widget-form__input_val",
+    "w-form_symbol": "widget-form__symbol",
+    "w-form_submit": "widget-form__submit",
     "w-sum": "widget-sum",
     "w-sum_text": "widget-sum__text",
     "w-sum_val": "widget-sum__value"
   };
   
+  const TEXT = {
+    "name": "Name",
+    "amount": "Amount",
+    "total": "Total"
+  };  
+ 
   class Widget {    
     constructor(container = document.body, title = "Expenses") {
       this.container = container;
       this.title = title;
       this._data = [
-        {name: 'abramov', value: 5},
-        {name: 'abramov2', value: 32},
-        {name: 'abramov3'}
+        {name: 'Dinner',      amount: 23.50},
+        {name: 'Lunch',       amount: 17.99},
+        {name: 'Space Hulk',  amount: 12.99}
       ];      
      
       this._render();
@@ -35,12 +53,35 @@ var Widget = (function() {
     
     _calculateAmount() {
       return this._data.reduce((prev, curr) => {
-        return prev + (curr.value || 0);
+        return prev + (curr.amount || 0);
       }, 0);
     }
     
+    _generateDataRows() {
+      if (!this._data.length) {
+        return false;
+      }
+      
+      return this._data.map((data) =>
+        `
+        <div class="${CSS['w-tbl_tr']}">
+          ${Object.keys(data).map((key) => {
+            let text = key === "amount" ? "$" + data[key] : data[key];
+          
+            return `
+              <div class="${CSS['w-tbl_td']}">
+                <span>${text}</span>
+              </div>
+            `;
+          }).join("")}
+        </div>
+        `
+      ).join("");
+    }
+    
     _generateTemplate() {
-      let amount = this._calculateAmount();
+      let totalAmount = this._calculateAmount();
+      let rows = this._generateDataRows();
       
       let template =
         `<div class="${CSS['w']}">
@@ -48,72 +89,43 @@ var Widget = (function() {
           <h3 class="${CSS['w_title']}">${this.title}</h3>
           <div class="${CSS['w_expand']}"></div>
         </header>
-        <section class="widget__body">
-          <div class="widget-table">
-            <div class="widget-table__head">
-              <div class="widget-table__tr">
-                <div class="widget-table__td">
-                  <div class="widget-table__head-item">Name</div>
+        <section class="${CSS['w_body']}">
+          <div class="${CSS['w-tbl']}">
+            <div class="${CSS['w-tbl_head']}">
+              <div class="${CSS['w-tbl_tr']}">
+                <div class="${CSS['w-tbl_td']}">
+                  <div class="${CSS['w-tbl_head-i']}">${TEXT.name}</div>
                 </div>
-                <div class="widget-table__td">
-                  <div class="widget-table__head-item">Amount</div>
+                <div class="${CSS['w-tbl_td']}">
+                  <div class="${CSS['w-tbl_head-i']}">${TEXT.amount}</div>
                 </div>
               </div>
             </div>
-            <div class="widget-table__body">
-              <div class="widget-table__tr">
-                <div class="widget-table__td"><span>1</span></div>
-                <div class="widget-table__td"><span>2</span></div>
-              </div>
-                            <div class="widget-table__tr">
-                <div class="widget-table__td"><span>1</span></div>
-                <div class="widget-table__td"><span>2</span></div>
-              </div>
-                            <div class="widget-table__tr">
-                <div class="widget-table__td"><span>1</span></div>
-                <div class="widget-table__td"><span>2</span></div>
-              </div>
-                            <div class="widget-table__tr">
-                <div class="widget-table__td"><span>1</span></div>
-                <div class="widget-table__td"><span>2</span></div>
-              </div>
-                            <div class="widget-table__tr">
-                <div class="widget-table__td"><span>1</span></div>
-                <div class="widget-table__td"><span>2</span></div>
-              </div>
-                            <div class="widget-table__tr">
-                <div class="widget-table__td"><span>1</span></div>
-                <div class="widget-table__td"><span>2</span></div>
-              </div>
-                            <div class="widget-table__tr">
-                <div class="widget-table__td"><span>1</span></div>
-                <div class="widget-table__td"><span>2</span></div>
-              </div>
-                            <div class="widget-table__tr">
-                <div class="widget-table__td"><span>1</span></div>
-                <div class="widget-table__td"><span>2</span></div>
-              </div>
+            <div class="${CSS['w-tbl_body']}">
+              ${rows}
             </div>
           </div>
         </section>
         <footer class="${CSS['w_footer']}">
-          <div class="widget-form">
-            <div class="widget-form__cell">
-              <input class="widget-form__input" 
+          <div class="${CSS['w-form']}">
+            <div class="${CSS['w-form_cell']}">
+              <input class="${CSS['w-form_input']}" 
                     type="text"
-                    name="w_name"/>
+                    name="w_name"
+                    placeholder="${TEXT.name}"/>
             </div>
-            <div class="widget-form__cell">
-              <span class="widget-form__symbol"></span>
-              <input class="widget-form__input widget-form__input_val" 
+            <div class="${CSS['w-form_cell']}">
+              <span class="${CSS['w-form_symbol']}"></span>
+              <input class="${CSS['w-form_input']} ${CSS['w-form_input_val']}" 
                     type="text"
-                    name="w_value"/>
-              <button class="widget-form__submit" name="w_submit"></button>
+                    name="w_amount"
+                    placeholder="${TEXT.amount}"/>
+              <button class="${CSS['w-form_submit']}" name="w_submit"></button>
             </div>
           </div>
-          <div class="widget-sum">
-            <div class="widget-sum__text">Total</div>           
-            <div class="widget-sum__value">${amount}</div>
+          <div class="${CSS['w-sum']}">
+            <div class="${CSS['w-sum_text']}">${TEXT.total}</div>           
+            <div class="${CSS['w-sum_val']}">${totalAmount}</div>
           </div>
         </footer>
       </div>`;

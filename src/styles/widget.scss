@@ -120,7 +120,7 @@ $widget-row-height: 35px;
   // inner blocks
   .#{$widget}-table {
     position: relative;
-    background: $widget-tbl-bg;
+    //background: $widget-tbl-bg;
     
     &__head {
       background: $widget-tbl-head-bg;
@@ -140,6 +140,7 @@ $widget-row-height: 35px;
       //column-rule: 1px solid $widget-border-color;
       
       &:last-child { border: 0; }
+      &:nth-child(even) { background: $widget-tbl-bg; }       
     }
     
     &__td {
