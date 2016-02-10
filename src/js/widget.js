@@ -37,6 +37,12 @@ var Widget = (function() {
   const SIGN = "$";
   
   const LS = "widgetData";
+  
+  var utils = {
+    isObject: (obj) => obj !== null && typeof obj === "object",    
+    isString: (str) => typeof str === "string",
+    isNumber: (num) => (num != '' && !isNaN(parseFloat(num)))
+  };
 
   class Widget {    
     constructor(containerId, title = "Expenses") {
@@ -56,7 +62,7 @@ var Widget = (function() {
       this._sumValue = this.container.querySelector(`.${CSS['w-sum_val']}`);
 
       this._expandBtn.addEventListener('click', this.expandWidget.bind(this), false);
-      this._submitBtn.addEventListener('click', this.addNewData.bind(this), false);
+      this._submitBtn.addEventListener('click', this._submitHandler.bind(this), false);
       this._widget.addEventListener('keypress', function(ev){
         let e = ev || window.event;
         
@@ -128,14 +134,18 @@ var Widget = (function() {
               <input class="${CSS['w-form_input']}" 
                     type="text"
                     name="w_name"
-                    placeholder="${TEXT.name}"/>
+                    placeholder="${TEXT.name}"
+                    required="required"
+                    pattern="[a-zA-Z-&][a-zA-Z-& ]+"/>
             </div>
             <div class="${CSS['w-form_cell']}">
               <span class="${CSS['w-form_symbol']}">${SIGN}</span>
               <input class="${CSS['w-form_input']} ${CSS['w-form_input_val']}" 
                     type="text"
                     name="w_amount"
-                    placeholder="${TEXT.amount}"/>
+                    placeholder="${TEXT.amount}"
+                    required="required"
+                    pattern="\\d+(.\\d{2})?"/>
               <button class="${CSS['w-form_submit']}" name="w_submit"></button>
             </div>
           </div>
@@ -161,6 +171,20 @@ var Widget = (function() {
       this.container.innerHTML = this._generateTemplate();
     }
     
+    _submitHandler() {
+      let name, amount, data;
+      
+      if (!this._nameInput.validity.valid || !this._amountInput.validity.valid) {
+        return false;
+      }
+
+      name = this._nameInput.value;
+      amount = ''+this._amountInput.value;
+      data = { name, amount };
+      
+      this.addData(data);
+    }
+    
     expandWidget() {
       if (this._widget.classList.contains(CSS['w--collapsed'])) {
         this._widget.classList.remove(CSS['w--collapsed']);
@@ -173,14 +197,16 @@ var Widget = (function() {
       this._expandBtn.classList.add(CSS['w_expand--active']);
     }
     
-    addNewData() {
-      let name = this._nameInput.value || "NA";
-      let amount = ''+this._amountInput.value || "0";
-      let newData = {name, amount};
-      
-      this._data.push(newData);
+    addData(data) {
+      if (!utils.isObject(data)) {
+        return false;
+      }
+
+      this._data.push(data);
       localStorage.setItem(this._storeId, JSON.stringify(this._data));
       this._updateHTML();
+
+      return this;
     }
     
     clearData() {
@@ -188,6 +214,8 @@ var Widget = (function() {
       localStorage.setItem(this._storeId, JSON.stringify(this._data));
       
       this._updateHTML();
+      
+      return this;
     }
     
     getData() {

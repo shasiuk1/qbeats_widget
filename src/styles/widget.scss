@@ -27,6 +27,7 @@ $widget-form-bg: darken($Clouds, 25%);
 $widget-sum-bg: $Clouds;
 $widget-input-color: $Nephritis;
 $widget-input-bg: $white;
+$widget-input-invalid: $Pomegranate;
 $widget-tbl-bg: rgba($Clouds, .5);
 $widget-tbl-head-bg: darken($Clouds, 25%);
 
@@ -214,8 +215,13 @@ $widget-row-height: 35px;
       transition: all .2s;
       min-width: 25px;
       
-      &:focus {
+      &:focus,
+      &:valid {
         border-color: $widget-input-color;
+      }
+      
+      &:invalid {
+        border-color: $widget-input-invalid;
       }
       
       &_val {
