@@ -155,8 +155,26 @@ $widget-row-height: 35px;
     
     &__head-item {
       width: 100%;
-      font-weight: bold;
-      cursor: pointer;
+      font-weight: bold;     
+      
+      &[data-w-dataSorted] {
+        cursor: pointer;
+        &:after {
+          margin: 0 4px;
+        }
+      }
+      
+      &[data-w-dataSorted="true"] {
+        &:after {
+          content: "\25BC"
+        }
+      }
+
+      &[data-w-dataSorted="false"] {
+        &:after {
+          content: "\25B2"
+        }
+      }
     }
   }
   

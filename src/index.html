@@ -7,22 +7,46 @@
     body {
       margin: 0;
       padding: 0;
+      text-align: center;
     }
     
-    #container {
-      width: 550px;
-      margin: 50px auto;
+    .wrapper {
+      text-align: center;
     }
+    
+    .container {
+      display: inline-block;
+      width: 550px;
+      margin: 50px 15px;
+      vertical-align: top;
+    }
+    
   </style>
   <link rel="stylesheet" href="widget.css">
 </head>
 <body>
 
-<div id="container"></div>
+<div class="wrapper">
+  <div id="container" class="container"></div>
+  <div id="container2" class="container"></div>
+</div>
 
 <script src="widget.js"></script>
 <script>
-  var a = new Widget('container');
+  var d = [
+    {name: "First Name", amount: "35.2"},
+    {name: "Second Name", amount: "1.223"},
+    {name: "Third Name", amount: "1222.0"},
+    {name: "4th Name", amount: "23"}
+  ];
+  
+  var widget = new Widget('container');
+  var widget2 = new Widget('container2', 'WhatEver!');
+  
+  widget.clearData();
+  d.forEach(function(i){
+    widget.addData(i);
+  });
 </script>
 
 </body>

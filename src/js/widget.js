@@ -50,6 +50,7 @@ var Widget = (function() {
       this.title = title;
       this._storeId = `${LS}_${containerId}`;
       this._data = JSON.parse(localStorage.getItem(this._storeId)) || [];
+      this._sorted = true;
 
       this._render();
       
@@ -60,30 +61,52 @@ var Widget = (function() {
       this._submitBtn = this.container.querySelector(`[name="w_submit"]`);
       this._dataTable = this.container.querySelector(`.${CSS['w-tbl_body']}`);
       this._sumValue = this.container.querySelector(`.${CSS['w-sum_val']}`);
+      this._sortBtn = this.container.querySelector(`[data-w-dataSorted]`);
 
       this._expandBtn.addEventListener('click', this.expandWidget.bind(this), false);
       this._submitBtn.addEventListener('click', this._submitHandler.bind(this), false);
-      this._widget.addEventListener('keypress', function(ev){
+      this._sortBtn.addEventListener('click', this._sortHandler.bind(this), false);
+      this._widget.addEventListener('keydown', function(ev){
         let e = ev || window.event;
         
         if (e.keyCode === 13) {
-          this._submitBtn.click();
+          this._submitHandler();
         }
         
       }.bind(this), false);
     }
+
+    _sortHandler(e) {
+      let el = e.currentTarget;
+      
+      this._sorted = !this._sorted;
+      this._sortData();        
+      this._dataTable.innerHTML = this._generateDataRows();
+      el.setAttribute('data-w-dataSorted', this._sorted);
+    }
+
+    _submitHandler() {
+      if (!this._nameInput.validity.valid || !this._amountInput.validity.valid) {
+        alert('plz enter valid data');
+        return false;
+      }
+
+      let name = this._nameInput.value;
+      let amount = '' + this._amountInput.value;
+      let data = { name, amount };
+
+      this._nameInput.value = '';
+      this._amountInput.value = '';
+      this.addData(data);
+    }
     
     _calculateAmount() {
-      return this._data.reduce((prev, curr) => {
+      return SIGN + this._data.reduce((prev, curr) => {
         return prev + (parseFloat(curr.amount) || 0);
       }, 0);
     }   
 
     _generateDataRows() {
-      if (!this._data.length) {
-        return [];
-      }
-      
       return this._data.map((data) =>
         `
         <div class="${CSS['w-tbl_tr']}">
@@ -99,10 +122,20 @@ var Widget = (function() {
         </div>
         `
       ).join("");
+    }  
+
+    _sortData() {
+      if (this._sorted) {
+        this._data.sort((a, b) => b.amount - a.amount);
+      } else {
+        this._data.sort((a, b) => a.amount - b.amount);               
+      }
+      
+      return this._data;
     }
     
-    _generateTemplate() {
-      let totalAmount = SIGN + this._calculateAmount();
+    _render() {
+      let totalAmount = this._calculateAmount();
       let rows = this._generateDataRows();
       
       let template =
@@ -116,7 +149,8 @@ var Widget = (function() {
             <div class="${CSS['w-tbl_head']}">
               <div class="${CSS['w-tbl_tr']}">
                 <div class="${CSS['w-tbl_td']}">
-                  <div class="${CSS['w-tbl_head-i']}">${TEXT.name}</div>
+                  <div class="${CSS['w-tbl_head-i']}"
+                        data-w-dataSorted="${this._sorted}">${TEXT.name}</div>
                 </div>
                 <div class="${CSS['w-tbl_td']}">
                   <div class="${CSS['w-tbl_head-i']}">${TEXT.amount}</div>
@@ -156,35 +190,9 @@ var Widget = (function() {
         </footer>
       </div>`;
 
-      return template;
+      this.container.innerHTML = template;
     }
-    
-    _updateHTML() {
-      let rows = this._generateDataRows();
-      let totalAmount = SIGN + this._calculateAmount();
-      
-      this._dataTable.innerHTML = rows;
-      this._sumValue.innerHTML = totalAmount;
-    }
-    
-    _render() {     
-      this.container.innerHTML = this._generateTemplate();
-    }
-    
-    _submitHandler() {
-      let name, amount, data;
-      
-      if (!this._nameInput.validity.valid || !this._amountInput.validity.valid) {
-        return false;
-      }
 
-      name = this._nameInput.value;
-      amount = ''+this._amountInput.value;
-      data = { name, amount };
-      
-      this.addData(data);
-    }
-    
     expandWidget() {
       if (this._widget.classList.contains(CSS['w--collapsed'])) {
         this._widget.classList.remove(CSS['w--collapsed']);
@@ -201,10 +209,15 @@ var Widget = (function() {
       if (!utils.isObject(data)) {
         return false;
       }
-
+      
+      if (data.hasOwnProperty('amount')) {
+        data['amount'] = parseFloat(data['amount']).toFixed(2) + '';
+      }
+      
       this._data.push(data);
-      localStorage.setItem(this._storeId, JSON.stringify(this._data));
-      this._updateHTML();
+      localStorage.setItem(this._storeId, JSON.stringify(this._sortData()));
+      this._dataTable.innerHTML = this._generateDataRows();
+      this._sumValue.innerHTML = this._calculateAmount();
 
       return this;
     }
@@ -212,8 +225,9 @@ var Widget = (function() {
     clearData() {
       this._data = [];
       localStorage.setItem(this._storeId, JSON.stringify(this._data));
-      
-      this._updateHTML();
+
+      this._dataTable.innerHTML = this._generateDataRows();
+      this._sumValue.innerHTML = this._calculateAmount();
       
       return this;
     }
