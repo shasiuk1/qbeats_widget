@@ -168,7 +168,7 @@ var Widget = (function() {
               <input class="${CSS['w-form_input']}" 
                     type="text"
                     name="w_name"
-                    placeholder="${TEXT.name}"
+                    placeholder="Jane Doe"
                     required="required"
                     pattern="[a-zA-Z-&][a-zA-Z-& ]+"/>
             </div>
@@ -177,7 +177,7 @@ var Widget = (function() {
               <input class="${CSS['w-form_input']} ${CSS['w-form_input_val']}" 
                     type="text"
                     name="w_amount"
-                    placeholder="${TEXT.amount}"
+                    placeholder="19.99"
                     required="required"
                     pattern="\\d+(.\\d{2})?"/>
               <button class="${CSS['w-form_submit']}" name="w_submit"></button>

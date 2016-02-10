@@ -39,18 +39,18 @@
     {name: "Third Name", amount: "1222.0"},
     {name: "4th Name", amount: "23"}
   ];
-  
+
   var widget = new Widget('container');
   var widget2 = new Widget('container2', 'WhatEver!');
-  
-  widget.clearData();
+
+  widget
+      .addData({name: "First Name", amount: "35.2"})
+      .clearData();
+
   d.forEach(function(i){
     widget.addData(i);
   });
-
-  widget2
-      .addData({name: "First Name", amount: "35.2"})
-      .clearData();
+  
 </script>
 
 </body>
