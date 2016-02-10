@@ -61,7 +61,7 @@ var Widget = (function() {
       this._submitBtn = this.container.querySelector(`[name="w_submit"]`);
       this._dataTable = this.container.querySelector(`.${CSS['w-tbl_body']}`);
       this._sumValue = this.container.querySelector(`.${CSS['w-sum_val']}`);
-      this._sortBtn = this.container.querySelector(`[data-w-dataSorted]`);
+      this._sortBtn = this.container.querySelector(`[data-w-datasorted]`);
 
       this._expandBtn.addEventListener('click', this.expandWidget.bind(this), false);
       this._submitBtn.addEventListener('click', this._submitHandler.bind(this), false);
@@ -82,7 +82,7 @@ var Widget = (function() {
       this._sorted = !this._sorted;
       this._sortData();        
       this._dataTable.innerHTML = this._generateDataRows();
-      el.setAttribute('data-w-dataSorted', this._sorted);
+      el.setAttribute('data-w-datasorted', this._sorted);
     }
 
     _submitHandler() {
@@ -150,7 +150,7 @@ var Widget = (function() {
               <div class="${CSS['w-tbl_tr']}">
                 <div class="${CSS['w-tbl_td']}">
                   <div class="${CSS['w-tbl_head-i']}"
-                        data-w-dataSorted="${this._sorted}">${TEXT.name}</div>
+                        data-w-datasorted="${this._sorted}">${TEXT.name}</div>
                 </div>
                 <div class="${CSS['w-tbl_td']}">
                   <div class="${CSS['w-tbl_head-i']}">${TEXT.amount}</div>

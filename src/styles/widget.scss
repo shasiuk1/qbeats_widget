@@ -164,13 +164,13 @@ $widget-row-height: 35px;
         }
       }
       
-      &[data-w-dataSorted="true"] {
+      &[data-w-datasorted="true"] {
         &:after {
           content: "\25BC"
         }
       }
 
-      &[data-w-dataSorted="false"] {
+      &[data-w-datasorted="false"] {
         &:after {
           content: "\25B2"
         }
