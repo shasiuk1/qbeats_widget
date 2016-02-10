@@ -33,40 +33,56 @@ var Widget = (function() {
     "amount": "Amount",
     "total": "Total"
   };  
- 
+  
+  const SIGN = "$";
+  
+  const LS = "widgetData";
+
   class Widget {    
-    constructor(container = document.body, title = "Expenses") {
-      this.container = container;
+    constructor(containerId, title = "Expenses") {
+      this.container = document.getElementById(containerId);
       this.title = title;
-      this._data = [
-        {name: 'Dinner',      amount: 23.50},
-        {name: 'Lunch',       amount: 17.99},
-        {name: 'Space Hulk',  amount: 12.99}
-      ];      
-     
+      this._storeId = `${LS}_${containerId}`;
+      this._data = JSON.parse(localStorage.getItem(this._storeId)) || [];
+
       this._render();
+      
       this._widget = this.container.querySelector(`.${CSS['w']}`);
       this._expandBtn = this.container.querySelector(`.${CSS['w_expand']}`);
+      this._nameInput = this.container.querySelector(`[name="w_name"]`);
+      this._amountInput = this.container.querySelector(`[name="w_amount"]`);
+      this._submitBtn = this.container.querySelector(`[name="w_submit"]`);
+      this._dataTable = this.container.querySelector(`.${CSS['w-tbl_body']}`);
+      this._sumValue = this.container.querySelector(`.${CSS['w-sum_val']}`);
 
       this._expandBtn.addEventListener('click', this.expandWidget.bind(this), false);
+      this._submitBtn.addEventListener('click', this.addNewData.bind(this), false);
+      this._widget.addEventListener('keypress', function(ev){
+        let e = ev || window.event;
+        
+        if (e.keyCode === 13) {
+          this._submitBtn.click();
+        }
+        
+      }.bind(this), false);
     }
     
     _calculateAmount() {
       return this._data.reduce((prev, curr) => {
-        return prev + (curr.amount || 0);
+        return prev + (parseFloat(curr.amount) || 0);
       }, 0);
-    }
-    
+    }   
+
     _generateDataRows() {
       if (!this._data.length) {
-        return false;
+        return [];
       }
       
       return this._data.map((data) =>
         `
         <div class="${CSS['w-tbl_tr']}">
           ${Object.keys(data).map((key) => {
-            let text = key === "amount" ? "$" + data[key] : data[key];
+            let text = key === "amount" ? SIGN + parseFloat(data[key]) : data[key];
           
             return `
               <div class="${CSS['w-tbl_td']}">
@@ -80,11 +96,11 @@ var Widget = (function() {
     }
     
     _generateTemplate() {
-      let totalAmount = this._calculateAmount();
+      let totalAmount = SIGN + this._calculateAmount();
       let rows = this._generateDataRows();
       
       let template =
-        `<div class="${CSS['w']}">
+        `<div class="${CSS['w']}" tabindex="0">
         <header class="${CSS['w_head']}">
           <h3 class="${CSS['w_title']}">${this.title}</h3>
           <div class="${CSS['w_expand']}"></div>
@@ -115,7 +131,7 @@ var Widget = (function() {
                     placeholder="${TEXT.name}"/>
             </div>
             <div class="${CSS['w-form_cell']}">
-              <span class="${CSS['w-form_symbol']}"></span>
+              <span class="${CSS['w-form_symbol']}">${SIGN}</span>
               <input class="${CSS['w-form_input']} ${CSS['w-form_input_val']}" 
                     type="text"
                     name="w_amount"
@@ -133,11 +149,19 @@ var Widget = (function() {
       return template;
     }
     
+    _updateHTML() {
+      let rows = this._generateDataRows();
+      let totalAmount = SIGN + this._calculateAmount();
+      
+      this._dataTable.innerHTML = rows;
+      this._sumValue.innerHTML = totalAmount;
+    }
+    
     _render() {     
       this.container.innerHTML = this._generateTemplate();
     }
     
-    expandWidget(e) {
+    expandWidget() {
       if (this._widget.classList.contains(CSS['w--collapsed'])) {
         this._widget.classList.remove(CSS['w--collapsed']);
         this._expandBtn.classList.remove(CSS['w_expand--active']);
@@ -149,6 +173,23 @@ var Widget = (function() {
       this._expandBtn.classList.add(CSS['w_expand--active']);
     }
     
+    addNewData() {
+      let name = this._nameInput.value || "NA";
+      let amount = ''+this._amountInput.value || "0";
+      let newData = {name, amount};
+      
+      this._data.push(newData);
+      localStorage.setItem(this._storeId, JSON.stringify(this._data));
+      this._updateHTML();
+    }
+    
+    clearData() {
+      this._data = [];
+      localStorage.setItem(this._storeId, JSON.stringify(this._data));
+      
+      this._updateHTML();
+    }
+    
     getData() {
       return JSON.stringify(this._data, null, 1);
     }
@@ -156,4 +197,3 @@ var Widget = (function() {
   
   return Widget;
 }());
-

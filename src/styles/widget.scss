@@ -45,6 +45,7 @@ $widget-row-height: 35px;
   border-radius: 5px;
   overflow: hidden;
   max-height: 999px;
+  outline: 0 !important;
   transition: max-height 1s ease-in;
   
   *,
@@ -177,13 +178,7 @@ $widget-row-height: 35px;
       }
     }
     
-    &__value {
-      &:before {
-        content:'\24';
-        margin-right: 2px;
-      }
-    }
-    
+    &__value {}    
   }
   
   .#{$widget}-form {
@@ -233,10 +228,6 @@ $widget-row-height: 35px;
       margin: 0 3px 4px;
       font-size: 1.4em;
       color: darken($widget-input-color, 15%);
-
-      &:after {
-        content:'\24';
-      }
     }
     
     &__submit {
