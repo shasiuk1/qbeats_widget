@@ -31,18 +31,20 @@
   <div id="container2" class="container"></div>
 </div>
 
-<script src="widget.js"></script>
+<script src="widget.build.js"></script>
 <script>
-  var d = [
-    {name: "First Name", amount: "35.2"},
-    {name: "Second Name", amount: "1.223"},
-    {name: "Third Name", amount: "1222.0"},
-    {name: "4th Name", amount: "23"}
+  var d = [    
+    {name: "broccoli", amount: "1.223"},
+    {name: "Jane Doe", amount: "23"},
+    {name: "Doestoevsky", amount: "1222.0"},
+    {name: "Abraham Lincoln", amount: "35.2"},
+    {name: "Jonathan  Davis", amount: "23"}
   ];
 
   var widget = new Widget('container');
   var widget2 = new Widget('container2', 'WhatEver!');
-
+  
+  // methods can be chained
   widget
       .addData({name: "First Name", amount: "35.2"})
       .clearData();
