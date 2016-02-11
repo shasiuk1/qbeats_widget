@@ -1,3 +1,8 @@
+/**
+ * Constants module
+ */
+
+/** CSS classes. */
 export const CSS = {
   "w": "widget",
   "w--collapsed": "widget_collapsed",
@@ -24,10 +29,12 @@ export const CSS = {
   "w-sum_val": "widget-sum__value"
 };
 
+/** Text within widget. */
 export const TEXT = {
   "name": "Name",
   "amount": "Amount",
   "total": "Total"
 };
 
+/** Name of LocalStorage */
 export const LS = "widgetData";

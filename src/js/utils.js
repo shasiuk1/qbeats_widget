@@ -1,9 +1,8 @@
 /**
- * Utils and Helpers
- * @type {{isObject: utils.isObject, isString: utils.isString, isNumber: utils.isNumber}}
+ * Utils module.
  */
 var utils = {
-  isObject:(obj) => obj !== null && typeof obj === "object",
+  isObject: (obj) => obj !== null && typeof obj === "object",
   isString: (str) => typeof str === "string",
   isNumber: (num) => (num != '' && !isNaN(parseFloat(num)))
 };
