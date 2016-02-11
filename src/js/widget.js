@@ -1,56 +1,14 @@
+import utils from "./utils";
+import {CSS, TEXT, LS} from "./constants";
 
-
-var Widget = (function() {
-  
-  const CSS = {
-    "w": "widget",
-    "w--collapsed": "widget_collapsed",
-    "w_head": "widget__header",
-    "w_body": "widget__body",
-    "w_footer": "widget__footer",
-    "w_title": "widget__title",
-    "w_expand": "widget__expand-btn",
-    "w_expand--active": "widget__expand-btn_active",
-    "w-tbl": "widget-table",
-    "w-tbl_head": "widget-table__head",
-    "w-tbl_tr": "widget-table__tr",
-    "w-tbl_head-i": "widget-table__head-item",
-    "w-tbl_td": "widget-table__td",
-    "w-tbl_body": "widget-table__body",
-    "w-form": "widget-form",
-    "w-form_cell": "widget-form__cell",
-    "w-form_input": "widget-form__input",
-    "w-form_input_val": "widget-form__input_val",
-    "w-form_symbol": "widget-form__symbol",
-    "w-form_submit": "widget-form__submit",
-    "w-sum": "widget-sum",
-    "w-sum_text": "widget-sum__text",
-    "w-sum_val": "widget-sum__value"
-  };
-  
-  const TEXT = {
-    "name": "Name",
-    "amount": "Amount",
-    "total": "Total"
-  };  
-  
-  const SIGN = "$";
-  
-  const LS = "widgetData";
-  
-  var utils = {
-    isObject: (obj) => obj !== null && typeof obj === "object",    
-    isString: (str) => typeof str === "string",
-    isNumber: (num) => (num != '' && !isNaN(parseFloat(num)))
-  };
-
-  class Widget {    
+class Widget {    
     constructor(containerId, title = "Expenses") {
       this.container = document.getElementById(containerId);
       this.title = title;
       this._storeId = `${LS}_${containerId}`;
       this._data = JSON.parse(localStorage.getItem(this._storeId)) || [];
-      this._sorted = true;
+      this._sorted = 1;
+      this._sign = "$";
 
       this._render();
       
@@ -61,7 +19,7 @@ var Widget = (function() {
       this._submitBtn = this.container.querySelector(`[name="w_submit"]`);
       this._dataTable = this.container.querySelector(`.${CSS['w-tbl_body']}`);
       this._sumValue = this.container.querySelector(`.${CSS['w-sum_val']}`);
-      this._sortBtn = this.container.querySelector(`[data-w-datasorted]`);
+      this._sortBtn = this.container.querySelector(`[data-w-sortbyname]`);
 
       this._expandBtn.addEventListener('click', this.expandWidget.bind(this), false);
       this._submitBtn.addEventListener('click', this._submitHandler.bind(this), false);
@@ -79,10 +37,10 @@ var Widget = (function() {
     _sortHandler(e) {
       let el = e.currentTarget;
       
-      this._sorted = !this._sorted;
+      this._sorted = this._sorted === 1 ? -1 : 1;
+      el.setAttribute('data-w-sortbyname', this._sorted);
       this._sortData();        
-      this._dataTable.innerHTML = this._generateDataRows();
-      el.setAttribute('data-w-datasorted', this._sorted);
+      this._dataTable.innerHTML = this._generateDataRows();      
     }
 
     _submitHandler() {
@@ -101,7 +59,7 @@ var Widget = (function() {
     }
     
     _calculateAmount() {
-      return SIGN + this._data.reduce((prev, curr) => {
+      return this._sign + this._data.reduce((prev, curr) => {
         return prev + (parseFloat(curr.amount) || 0);
       }, 0);
     }   
@@ -111,7 +69,7 @@ var Widget = (function() {
         `
         <div class="${CSS['w-tbl_tr']}">
           ${Object.keys(data).map((key) => {
-            let text = key === "amount" ? SIGN + parseFloat(data[key]) : data[key];
+            let text = key === "amount" ? this._sign + parseFloat(data[key]) : data[key];
           
             return `
               <div class="${CSS['w-tbl_td']}">
@@ -125,13 +83,17 @@ var Widget = (function() {
     }  
 
     _sortData() {
-      if (this._sorted) {
-        this._data.sort((a, b) => b.amount - a.amount);
-      } else {
-        this._data.sort((a, b) => a.amount - b.amount);               
-      }
-      
-      return this._data;
+      return this._data.sort((a, b) => {
+        if(a.name.toLowerCase() < b.name.toLowerCase()) {
+          return -this._sorted;
+        }
+        
+        if(a.name.toLowerCase() > b.name.toLowerCase()) {
+          return this._sorted;
+        }
+        
+        return 0;
+      });
     }
     
     _render() {
@@ -150,7 +112,7 @@ var Widget = (function() {
               <div class="${CSS['w-tbl_tr']}">
                 <div class="${CSS['w-tbl_td']}">
                   <div class="${CSS['w-tbl_head-i']}"
-                        data-w-datasorted="${this._sorted}">${TEXT.name}</div>
+                        data-w-sortbyname="${this._sorted}">${TEXT.name}</div>
                 </div>
                 <div class="${CSS['w-tbl_td']}">
                   <div class="${CSS['w-tbl_head-i']}">${TEXT.amount}</div>
@@ -173,7 +135,7 @@ var Widget = (function() {
                     pattern="[a-zA-Z-&][a-zA-Z-& ]+"/>
             </div>
             <div class="${CSS['w-form_cell']}">
-              <span class="${CSS['w-form_symbol']}">${SIGN}</span>
+              <span class="${CSS['w-form_symbol']}">${this._sign}</span>
               <input class="${CSS['w-form_input']} ${CSS['w-form_input_val']}" 
                     type="text"
                     name="w_amount"
@@ -236,6 +198,5 @@ var Widget = (function() {
       return JSON.stringify(this._data, null, 1);
     }
   }
-  
-  return Widget;
-}());
+
+window['Widget'] = window['Widget'] || Widget;

@@ -7,6 +7,9 @@ var autoprefixer = require('gulp-autoprefixer');
 var sequence = require('run-sequence');
 var cssnano = require('gulp-cssnano');
 var del = require('del');
+var babelify = require('babelify');
+var browserify = require('browserify');
+var source = require('vinyl-source-stream');
 
 var SRC = "src";
 var DEST = "dist";
@@ -43,13 +46,16 @@ var lintSass  = function(src) {
       .on('error', errorHandler('Sass Linting!'));
 };
 
-var processJs = function(src, dest) {
-  return gulp.src(src)
-    .pipe(babel({
+var processJs = function(src, dest, output) {
+  return browserify({ entries: src, debug: true })
+    .transform('babelify', { 
       presets: ['es2015'],
-      plugins: ['transform-class-properties']
-    }))
-      .on('error', errorHandler('JS Error!'))
+      plugins: ['transform-class-properties'],
+      sourceMaps: false 
+    })
+    .bundle()
+    .on('error', errorHandler('JS Error!'))
+    .pipe(source(output))
     .pipe(gulp.dest(dest));
 };
 
@@ -63,7 +69,7 @@ gulp.task('clean', clean.bind(null, DEST + '/'));
 gulp.task('process:html', processHtml.bind(null, SRC + '/index.html', DEST));
 gulp.task('process:sass', processSass.bind(null, SRC + '/styles/widget.scss', DEST));
 gulp.task('lint:sass', lintSass.bind(null, SRC + '/styles/**/*.scss'));
-gulp.task('process:js', processJs.bind(null, SRC + '/js/widget.js', DEST));
+gulp.task('process:js', processJs.bind(null, SRC + '/js/Widget.js', DEST, 'widget.build.js'));
 
 gulp.task('watch', function() {
   gulp.watch(SRC + '/styles/**/*.scss', ['lint:sass', 'process:sass']);

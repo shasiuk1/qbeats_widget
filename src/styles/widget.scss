@@ -157,20 +157,20 @@ $widget-row-height: 35px;
       width: 100%;
       font-weight: bold;     
       
-      &[data-w-datasorted] {
+      &[data-w-sortbyname] {
         cursor: pointer;
         &:after {
           margin: 0 4px;
         }
       }
       
-      &[data-w-datasorted="true"] {
+      &[data-w-sortbyname="1"] {
         &:after {
           content: "\25BC"
         }
       }
 
-      &[data-w-datasorted="false"] {
+      &[data-w-sortbyname="-1"] {
         &:after {
           content: "\25B2"
         }
